@@ -3,22 +3,22 @@ CREATE DATABASE kimia_farma_db;
 use kimia_farma_db;
 
 CREATE TABLE grup_dim(
-	id_grup VARCHAR(10) PRIMARY KEY,
+    id_grup VARCHAR(10) PRIMARY KEY,
     nama_grup VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE cabang_sales_dim(
-	id_cabang_sales VARCHAR(10) PRIMARY KEY,
+    id_cabang_sales VARCHAR(10) PRIMARY KEY,
     kota_cabang_sales VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE merek_dim(
-	id_merek VARCHAR(10) PRIMARY KEY,
+    id_merek VARCHAR(10) PRIMARY KEY,
     nama_merek VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE barang_dim(
-	id_barang VARCHAR(10) PRIMARY KEY,
+    id_barang VARCHAR(10) PRIMARY KEY,
     nama_barang VARCHAR(255) NOT NULL,
     nama_tipe VARCHAR(50),
     id_merek VARCHAR(10),
@@ -28,7 +28,7 @@ CREATE TABLE barang_dim(
 );
 
 CREATE TABLE pelanggan_dim(
-	id_pelanggan VARCHAR(50) PRIMARY KEY,
+    id_pelanggan VARCHAR(50) PRIMARY KEY,
     level VARCHAR(50),
     nama_pelanggan VARCHAR(255) NOT NULL,
     id_cabang_sales VARCHAR(10),
@@ -38,7 +38,7 @@ CREATE TABLE pelanggan_dim(
 );
 
 CREATE TABLE penjualan_fact(
-	id_invoice VARCHAR(10) PRIMARY KEY,
+    id_invoice VARCHAR(10) PRIMARY KEY,
     id_distributor VARCHAR(10),
     id_cabang_sales VARCHAR(10),
     tanggal DATE,
@@ -57,8 +57,8 @@ CREATE TABLE penjualan_fact(
 
 -- Aggregate table
 CREATE TABLE penjualan_per_hari
-	SELECT
-		jual.tanggal as tanggal,
+    SELECT
+        jual.tanggal as tanggal,
         jual.id_distributor AS distributor,
         brg.nama_barang as nama_barang,
         merek.nama_merek as merek,
@@ -67,7 +67,7 @@ CREATE TABLE penjualan_per_hari
         SUM(jumlah_barang) as total_barang,
         SUM(jual.harga_per_unit * jual.jumlah_barang) as total_pendapatan
     FROM penjualan_fact jual
-		JOIN barang_dim brg ON jual.id_barang = brg.id_barang
+        JOIN barang_dim brg ON jual.id_barang = brg.id_barang
         JOIN cabang_sales_dim cbg ON jual.id_cabang_sales = cbg.id_cabang_sales
-		JOIN merek_dim merek ON jual.id_merek = merek.id_merek
+        JOIN merek_dim merek ON jual.id_merek = merek.id_merek
 ;
